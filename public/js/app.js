@@ -19,14 +19,20 @@ jquery__WEBPACK_IMPORTED_MODULE_0___default()(document).ready(function () {
     processing: true,
     serverSide: true,
     paging: true,
-    //ajax: "/load",
     ajax: {
       url: '/load',
-      type: 'POST'
+      type: 'POST',
+      "data": function data(d) {
+        d._token = csrf_token;
+      }
     },
     select: {
       toggleable: true
-    }
+    },
+    columnDefs: [{
+      orderable: false,
+      targets: [0, 4, 5, 6, 9]
+    }]
   });
   jquery__WEBPACK_IMPORTED_MODULE_0___default()('#data tbody').on('click', 'tr', function () {
     if (jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).hasClass('selected')) {

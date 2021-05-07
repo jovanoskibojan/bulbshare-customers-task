@@ -59,7 +59,8 @@ class CustomersController extends Controller
         $search_term = $request->search['value'];
         $total = Customer::select('id')->count();
         $filter = $total;
-
+        $oder_by = $request->order[0]['column'];
+        $oder_direction = $request->order[0]['dir'];
         $fields = ['id', 'company', 'last_name', 'first_name', 'email_address', 'job_title', 'business_phone', 'address', 'city', 'zip_postal_code', 'country_region'];
 
         if(isset($search_term)) {
@@ -72,6 +73,7 @@ class CustomersController extends Controller
                 ->orWhere('country_region', 'like', "%{$search_term}%")
                 ->skip($start)
                 ->limit($length)
+                ->orderBy($fields[$oder_by], $oder_direction)
                 ->get();
             $filter = $customers->count();
         }
@@ -79,6 +81,7 @@ class CustomersController extends Controller
             $customers = Customer::select($fields)
                 ->skip($start)
                 ->limit($length)
+                ->orderBy($fields[$oder_by], $oder_direction)
                 ->get();
         }
         $customerData = $customers->toArray();
