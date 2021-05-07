@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\HomeController;
+use App\Http\Controllers\CustomersController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -13,5 +13,5 @@ use App\Http\Controllers\HomeController;
 |
 */
 
-Route::resource('/', 'HomeController');
-Route::get('/load', 'HomeController@load');
+Route::resource('/', 'CustomersController');
+Route::post('/load', 'CustomersController@load');

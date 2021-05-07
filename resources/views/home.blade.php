@@ -5,6 +5,7 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="csrf-token" content="{{ csrf_token() }}" />
     <title>Bulbshare TechTask - fullstack</title>
     <!-- DataTables CSS -->
     <link id="theme-style" rel="stylesheet" href="http://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
@@ -25,8 +26,6 @@
         <th>City</th>
         <th>Zip/Postal code</th>
         <th>Country/Region</th>
-        <th>Orders total</th>
-        <th>Orders total value</th>
     </tr>
     </thead>
     <tfoot>
@@ -42,8 +41,6 @@
         <th>City</th>
         <th>Zip/Postal code</th>
         <th>Country/Region</th>
-        <th>Orders total</th>
-        <th>Orders total value</th>
     </tr>
     </tfoot>
 </table>
