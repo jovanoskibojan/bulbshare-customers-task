@@ -5,6 +5,29 @@ $(document).ready( function () {
     let csrf_token = $('meta[name="csrf-token"]').attr('content');
 
     let table = $('#data').DataTable( {
+
+        dom: 'Blfrtip',
+        buttons: [
+            {
+                text: 'New',
+                action: function ( e, dt, node, config ) {
+                    alert( 'Button activated' );
+                }
+            },
+            {
+                text: 'Edit',
+                action: function ( e, dt, node, config ) {
+                    alert( 'Button activated' );
+                }
+            },
+            {
+                text: 'Delete',
+                action: function ( e, dt, node, config ) {
+                    alert( 'Button activated' );
+                    console.log(e, dt, node, config);
+                }
+            }
+        ],
         processing: true,
         serverSide: true,
         paging: true,

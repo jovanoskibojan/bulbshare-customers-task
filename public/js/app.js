@@ -16,6 +16,24 @@ window.$ = window.jQuery = (jquery__WEBPACK_IMPORTED_MODULE_0___default());
 jquery__WEBPACK_IMPORTED_MODULE_0___default()(document).ready(function () {
   var csrf_token = jquery__WEBPACK_IMPORTED_MODULE_0___default()('meta[name="csrf-token"]').attr('content');
   var table = jquery__WEBPACK_IMPORTED_MODULE_0___default()('#data').DataTable({
+    dom: 'Blfrtip',
+    buttons: [{
+      text: 'New',
+      action: function action(e, dt, node, config) {
+        alert('Button activated');
+      }
+    }, {
+      text: 'Edit',
+      action: function action(e, dt, node, config) {
+        alert('Button activated');
+      }
+    }, {
+      text: 'Delete',
+      action: function action(e, dt, node, config) {
+        alert('Button activated');
+        console.log(e, dt, node, config);
+      }
+    }],
     processing: true,
     serverSide: true,
     paging: true,

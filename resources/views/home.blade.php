@@ -8,7 +8,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     <title>Bulbshare TechTask - fullstack</title>
     <!-- DataTables CSS -->
-    <link id="theme-style" rel="stylesheet" href="http://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.24/b-1.7.0/datatables.min.css"/>
     <link id="theme-style" rel="stylesheet" href="{{ asset('css/app.css') }}">
 </head>
 <body>
@@ -46,6 +46,6 @@
 </table>
 <!-- DataTables JS -->
 <script type="text/javascript" src="{{ asset('js/app.js') }}"></script>
-<script type="text/javascript" src="http://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.24/b-1.7.0/datatables.min.js"></script>
 </body>
 </html>
