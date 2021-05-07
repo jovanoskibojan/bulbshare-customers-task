@@ -13,5 +13,5 @@ use App\Http\Controllers\HomeController;
 |
 */
 
-Route::get('/test', [HomeController::class, 'index'])->name('home');
 Route::resource('/', 'HomeController');
+Route::get('/load', 'HomeController@load');
