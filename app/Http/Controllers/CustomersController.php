@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
+use App\Models\Order;
 use Illuminate\Http\Request;
 
 class CustomersController extends Controller
@@ -130,6 +131,16 @@ class CustomersController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $orders = Customer::find($id)->orders;
+        foreach ($orders as $order) {
+            foreach ($order->OrderDetails as $details) {
+                $details->delete();
+            }
+            foreach ($order->invoice as $invoice) {
+                $invoice->delete();
+            }
+            $order->delete();
+        }
+        return Customer::where('id', $id)->delete();
     }
 }

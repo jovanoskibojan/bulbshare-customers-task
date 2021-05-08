@@ -23,8 +23,20 @@ $(document).ready( function () {
             {
                 text: 'Delete',
                 action: function ( e, dt, node, config ) {
-                    alert( 'Button activated' );
-                    console.log(e, dt, node, config);
+                    let selData = table.rows(".selected").data();
+                    if(selData[0] === undefined) {
+                        alert("Please select a row first");
+                        return 0;
+                    }
+                    let rowID = selData[0][0];
+                    $.ajax({
+                        url: '/customers/' + rowID,
+                        type: 'DELETE',
+                        data: ({ _token : csrf_token }),
+                        success: function(result) {
+                            table.ajax.reload( null, false );
+                        }
+                    });
                 }
             }
         ],
@@ -32,7 +44,7 @@ $(document).ready( function () {
         serverSide: true,
         paging: true,
         ajax: {
-            url: '/load',
+            url: '/customers/load',
             type: 'POST',
             "data": function (d) {
                 d._token = csrf_token;

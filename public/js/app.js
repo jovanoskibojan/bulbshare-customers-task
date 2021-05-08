@@ -30,15 +30,31 @@ jquery__WEBPACK_IMPORTED_MODULE_0___default()(document).ready(function () {
     }, {
       text: 'Delete',
       action: function action(e, dt, node, config) {
-        alert('Button activated');
-        console.log(e, dt, node, config);
+        var selData = table.rows(".selected").data();
+
+        if (selData[0] === undefined) {
+          alert("Please select a row first");
+          return 0;
+        }
+
+        var rowID = selData[0][0];
+        jquery__WEBPACK_IMPORTED_MODULE_0___default().ajax({
+          url: '/customers/' + rowID,
+          type: 'DELETE',
+          data: {
+            _token: csrf_token
+          },
+          success: function success(result) {
+            table.ajax.reload(null, false);
+          }
+        });
       }
     }],
     processing: true,
     serverSide: true,
     paging: true,
     ajax: {
-      url: '/load',
+      url: '/customers/load',
       type: 'POST',
       "data": function data(d) {
         d._token = csrf_token;

@@ -13,5 +13,8 @@ use App\Http\Controllers\CustomersController;
 |
 */
 
-Route::resource('/', 'CustomersController');
-Route::post('/load', 'CustomersController@load');
+Route::get('/', function () {
+    return view('home');
+});
+Route::resource('/customers', 'CustomersController');
+Route::post('/customers/load', 'CustomersController@load');
