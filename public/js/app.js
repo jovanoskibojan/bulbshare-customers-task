@@ -11,6 +11,7 @@
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
 /* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _modal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modal */ "./resources/js/modal.js");
 
 window.$ = window.jQuery = (jquery__WEBPACK_IMPORTED_MODULE_0___default());
 jquery__WEBPACK_IMPORTED_MODULE_0___default()(document).ready(function () {
@@ -24,8 +25,33 @@ jquery__WEBPACK_IMPORTED_MODULE_0___default()(document).ready(function () {
       }
     }, {
       text: 'Edit',
+      attr: {
+        id: 'openModal'
+      },
       action: function action(e, dt, node, config) {
-        alert('Button activated');
+        var selData = table.rows(".selected").data();
+
+        if (selData[0] === undefined) {
+          alert("Please select a row first");
+          return 0;
+        }
+
+        var rowID = selData[0][0];
+        jquery__WEBPACK_IMPORTED_MODULE_0___default().ajax({
+          url: '/customers/' + rowID + '/edit',
+          type: 'GET',
+          data: {
+            _token: csrf_token,
+            id: rowID
+          },
+          success: function success(result) {
+            result = JSON.parse(result);
+            jquery__WEBPACK_IMPORTED_MODULE_0___default().each(result, function (key, value) {
+              jquery__WEBPACK_IMPORTED_MODULE_0___default()("#" + key).val(value);
+            });
+          }
+        });
+        jquery__WEBPACK_IMPORTED_MODULE_0___default()("#modifyData").toggle();
       }
     }, {
       text: 'Delete',
@@ -81,6 +107,32 @@ jquery__WEBPACK_IMPORTED_MODULE_0___default()(document).ready(function () {
   });
   jquery__WEBPACK_IMPORTED_MODULE_0___default()('#data').on('page.dt', function (e) {
     console.log(e);
+  });
+});
+
+
+/***/ }),
+
+/***/ "./resources/js/modal.js":
+/*!*******************************!*\
+  !*** ./resources/js/modal.js ***!
+  \*******************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_0__);
+
+jquery__WEBPACK_IMPORTED_MODULE_0___default()(document).ready(function () {
+  var modal = jquery__WEBPACK_IMPORTED_MODULE_0___default()("#modifyData");
+  jquery__WEBPACK_IMPORTED_MODULE_0___default()(".close").click(function () {
+    modal.toggle();
+  });
+  jquery__WEBPACK_IMPORTED_MODULE_0___default()(window).click(function (event) {
+    if (event.target.id == 'modifyData') {
+      modal.toggle();
+    }
   });
 });
 

@@ -1,4 +1,5 @@
 import $ from 'jquery';
+
 window.$ = window.jQuery = $;
 
 $(document).ready( function () {
@@ -16,8 +17,28 @@ $(document).ready( function () {
             },
             {
                 text: 'Edit',
+                attr: {
+                    id: 'openModal'
+                },
                 action: function ( e, dt, node, config ) {
-                    alert( 'Button activated' );
+                    let selData = table.rows(".selected").data();
+                    if(selData[0] === undefined) {
+                        alert("Please select a row first");
+                        return 0;
+                    }
+                    let rowID = selData[0][0];
+                    $.ajax({
+                        url: '/customers/' + rowID + '/edit',
+                        type: 'GET',
+                        data: ({ _token : csrf_token, id : rowID }),
+                        success: function(result) {
+                            result = JSON.parse(result);
+                            $.each(result, function (key, value) {
+                                $("#" + key).val(value);
+                            });
+                        }
+                    });
+                    $("#modifyData").toggle();
                 }
             },
             {
@@ -75,3 +96,5 @@ $(document).ready( function () {
         console.log(e);
     });
 } );
+
+import "./modal";

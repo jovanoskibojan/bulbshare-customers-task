@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 
 class CustomersController extends Controller
 {
+
+    private $fields = ['id', 'company', 'last_name', 'first_name', 'email_address', 'job_title', 'business_phone', 'address', 'city', 'zip_postal_code', 'country_region'];
     /**
      * Display a listing of the resource.
      *
@@ -62,10 +64,9 @@ class CustomersController extends Controller
         $filter = $total;
         $oder_by = $request->order[0]['column'];
         $oder_direction = $request->order[0]['dir'];
-        $fields = ['id', 'company', 'last_name', 'first_name', 'email_address', 'job_title', 'business_phone', 'address', 'city', 'zip_postal_code', 'country_region'];
 
         if(isset($search_term)) {
-            $customers = Customer::select($fields)
+            $customers = Customer::select($this->fields)
                 ->where('company', 'like', "%{$search_term}%")
                 ->orWhere('last_name', 'like', "%{$search_term}%")
                 ->orWhere('first_name', 'like', "%{$search_term}%")
@@ -74,15 +75,15 @@ class CustomersController extends Controller
                 ->orWhere('country_region', 'like', "%{$search_term}%")
                 ->skip($start)
                 ->limit($length)
-                ->orderBy($fields[$oder_by], $oder_direction)
+                ->orderBy($this->fields[$oder_by], $oder_direction)
                 ->get();
             $filter = $customers->count();
         }
         else {
-            $customers = Customer::select($fields)
+            $customers = Customer::select($this->fields)
                 ->skip($start)
                 ->limit($length)
-                ->orderBy($fields[$oder_by], $oder_direction)
+                ->orderBy($this->fields[$oder_by], $oder_direction)
                 ->get();
         }
         $customerData = $customers->toArray();
@@ -108,7 +109,8 @@ class CustomersController extends Controller
      */
     public function edit($id)
     {
-        //
+        $customer = Customer::select($this->fields)->where('id', $id)->first();
+        return json_encode($customer->toArray());
     }
 
     /**

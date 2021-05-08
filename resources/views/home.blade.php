@@ -44,6 +44,24 @@
     </tr>
     </tfoot>
 </table>
+
+<div id="modifyData" class="modal">
+
+    <!-- Modal content -->
+    <div class="modal-content">
+        <div class="modalHeader">
+            <span class="close">&times;</span>
+            <p>Update entry</p>
+        </div>
+        <div class="modalBody">
+            @include('modalForm')
+        </div>
+        <div class="modalFooter">
+            <input type="button" id="update" value="Update" class="button.dt-button">
+        </div>
+    </div>
+
+</div>
 <!-- DataTables JS -->
 <script type="text/javascript" src="{{ asset('js/app.js') }}"></script>
 <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.24/b-1.7.0/datatables.min.js"></script>
