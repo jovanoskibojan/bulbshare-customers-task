@@ -118,11 +118,17 @@ class CustomersController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return array
      */
     public function update(Request $request, $id)
     {
-        //
+        $data = $request->validate([
+            'company' => 'required',
+            'last_name' => 'required',
+            'first_name' => 'required'
+        ]);
+        Customer::where('id', $id)->update($data);
+        return json_encode(['message' => true]);
     }
 
     /**

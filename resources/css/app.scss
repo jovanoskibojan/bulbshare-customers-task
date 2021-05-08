@@ -1,3 +1,22 @@
+$errorColor: #ff3333;
+
+.field-error {
+    label {
+        color: $errorColor;
+    }
+    input {
+        border: 1px solid $errorColor !important;
+        & + p {
+            display: block !important;
+            position: absolute;
+            margin: 0 15px;
+            text-align: left;
+            color: $errorColor;
+            font-style: italic;
+            font-size: 14px;
+        }
+    }
+}
 .modal {
     display: none;
     position: fixed;
@@ -50,9 +69,13 @@
             padding: 10px;
             margin: auto;
             width: 70%;
+            p {
+                display: none;
+            }
             div {
                 padding: 5px;
                 text-align: center;
+                margin-bottom: 3px;
                 div {
                     display: inline-block;
                     width: 45%;
@@ -61,11 +84,7 @@
                     color: #2d3748;
                     text-align: left;
                 }
-                div:nth-child(even) {
-                    color: red;
-                }
                 input {
-                    width: 100%;
                     padding: .375rem .75rem;
                     color: #495057;
                     background-color: #fff;

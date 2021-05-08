@@ -125,6 +125,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_0__);
 
 jquery__WEBPACK_IMPORTED_MODULE_0___default()(document).ready(function () {
+  var csrf_token = jquery__WEBPACK_IMPORTED_MODULE_0___default()('meta[name="csrf-token"]').attr('content');
   var modal = jquery__WEBPACK_IMPORTED_MODULE_0___default()("#modifyData");
   jquery__WEBPACK_IMPORTED_MODULE_0___default()(".close").click(function () {
     modal.toggle();
@@ -133,6 +134,52 @@ jquery__WEBPACK_IMPORTED_MODULE_0___default()(document).ready(function () {
     if (event.target.id == 'modifyData') {
       modal.toggle();
     }
+  });
+  jquery__WEBPACK_IMPORTED_MODULE_0___default()("#update").click(function () {
+    var formData = jquery__WEBPACK_IMPORTED_MODULE_0___default()('#updateModal').serializeArray();
+    var userId = jquery__WEBPACK_IMPORTED_MODULE_0___default()("#id").val();
+    var requiredFields = jquery__WEBPACK_IMPORTED_MODULE_0___default()('input:required');
+    var requiredIDs = [];
+    requiredFields.each(function () {
+      requiredIDs.push(jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).attr('id'));
+    });
+    formData.push({
+      name: '_token',
+      value: csrf_token
+    });
+    jquery__WEBPACK_IMPORTED_MODULE_0___default().ajax({
+      url: '/customers/' + userId,
+      type: 'PATCH',
+      data: formData,
+      success: function success(result) {
+        result = JSON.parse(result);
+
+        if (result.message) {
+          requiredIDs.forEach(function (item) {
+            var field = jquery__WEBPACK_IMPORTED_MODULE_0___default()("#" + item);
+            field.parent().parent().removeClass('field-error');
+            field.next().html('');
+          });
+        }
+      },
+      error: function error(xhr) {
+        var fieldsWithErrors = [];
+        jquery__WEBPACK_IMPORTED_MODULE_0___default().each(xhr.responseJSON.errors, function (key, value) {
+          var field = jquery__WEBPACK_IMPORTED_MODULE_0___default()("#" + key);
+          field.parent().parent().addClass('field-error');
+          field.next().html(value);
+          fieldsWithErrors.push(key);
+        });
+        requiredIDs.forEach(function (item) {
+          if (jQuery.inArray(item, fieldsWithErrors) === -1) {
+            console.log("yes");
+            var field = jquery__WEBPACK_IMPORTED_MODULE_0___default()("#" + item);
+            field.parent().parent().removeClass('field-error');
+            field.next().html('');
+          }
+        });
+      }
+    });
   });
 });
 

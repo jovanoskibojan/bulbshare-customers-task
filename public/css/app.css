@@ -1,3 +1,19 @@
+.field-error label {
+  color: #ff3333;
+}
+.field-error input {
+  border: 1px solid #ff3333 !important;
+}
+.field-error input + p {
+  display: block !important;
+  position: absolute;
+  margin: 0 15px;
+  text-align: left;
+  color: #ff3333;
+  font-style: italic;
+  font-size: 14px;
+}
+
 .modal {
   display: none;
   position: fixed;
@@ -52,9 +68,13 @@
   margin: auto;
   width: 70%;
 }
+.modal .modal-content .modalBody p {
+  display: none;
+}
 .modal .modal-content .modalBody div {
   padding: 5px;
   text-align: center;
+  margin-bottom: 3px;
 }
 .modal .modal-content .modalBody div div {
   display: inline-block;
@@ -64,11 +84,7 @@
   color: #2d3748;
   text-align: left;
 }
-.modal .modal-content .modalBody div div:nth-child(even) {
-  color: red;
-}
 .modal .modal-content .modalBody div input {
-  width: 100%;
   padding: 0.375rem 0.75rem;
   color: #495057;
   background-color: #fff;
