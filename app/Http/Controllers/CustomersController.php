@@ -92,10 +92,29 @@ class CustomersController extends Controller
                 ->orderBy($this->fields[$oder_by], $oder_direction)
                 ->get();
         }
+        $totalValue = [];
+        $orderValue = [];
+        foreach ($customers as $customer) {
+            $shippingAndTax = 0;
+            $orderTotal = 0;
+            foreach ($customer->orders as $order) {
+                $shippingAndTax += (float)$order->shipping_fee + (float)$order->taxes;
+                foreach ($order->OrderDetails as $order_detail) {
+                    $orderTotal += $order_detail->quantity * $order_detail->unit_price;
+                }
+            }
+            $totalValue[] = $shippingAndTax + $orderTotal;
+            $orderValue[] = $orderTotal;
+        }
         $customerData = $customers->toArray();
         $customer = [];
-        foreach ($customerData as $key => $customer1) {
-            $customer[] = array_values($customer1);
+        $i = 0;
+        foreach ($customerData as $key => $aCustomer) {
+            $arraySlice = array_slice(array_values($aCustomer), 0,11);
+            $country = array_values($aCustomer)[11];
+            array_push($arraySlice, $orderValue[$i], $totalValue[$i], $country);
+            $customer[] = $arraySlice;
+            $i++;
         }
         $data = [
             "draw" => $draw,

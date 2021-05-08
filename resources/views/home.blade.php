@@ -26,6 +26,8 @@
         <th>City</th>
         <th>Zip/Postal code</th>
         <th>Country/Region</th>
+        <th>Orders total</th>
+        <th>Orders total value</th>
     </tr>
     </thead>
     <tfoot>
@@ -41,6 +43,8 @@
         <th>City</th>
         <th>Zip/Postal code</th>
         <th>Country/Region</th>
+        <th>Orders total</th>
+        <th>Orders total value</th>
     </tr>
     </tfoot>
 </table>
