@@ -1,29 +1,29 @@
 import $ from 'jquery';
-
 window.$ = window.jQuery = $;
 
+export let table;
 $(document).ready( function () {
     let csrf_token = $('meta[name="csrf-token"]').attr('content');
 
-    let table = $('#data').DataTable( {
+    table = $('#data').DataTable( {
 
         dom: 'Blfrtip',
         buttons: [
             {
                 text: 'New',
                 action: function ( e, dt, node, config ) {
-                    alert( 'Button activated' );
+                    $("#addData").toggle();
                 }
             },
             {
                 text: 'Edit',
                 attr: {
-                    id: 'openModal'
+                    id: 'openEditModal'
                 },
                 action: function ( e, dt, node, config ) {
                     let selData = table.rows(".selected").data();
                     if(selData[0] === undefined) {
-                        alert("Please select a row first");
+                        addErrorModal('Error', 'Please make sure you select a row');
                         return 0;
                     }
                     let rowID = selData[0][0];
@@ -46,24 +46,17 @@ $(document).ready( function () {
                 action: function ( e, dt, node, config ) {
                     let selData = table.rows(".selected").data();
                     if(selData[0] === undefined) {
-                        alert("Please select a row first");
+                        addErrorModal('Error', 'Please make sure you select a row');
                         return 0;
                     }
-                    let rowID = selData[0][0];
-                    $.ajax({
-                        url: '/customers/' + rowID,
-                        type: 'DELETE',
-                        data: ({ _token : csrf_token }),
-                        success: function(result) {
-                            table.ajax.reload( null, false );
-                        }
-                    });
+                    $("#removeConfirmation").toggle();
                 }
             }
         ],
         processing: true,
         serverSide: true,
         paging: true,
+        responsive: true,
         ajax: {
             url: '/customers/load',
             type: 'POST',
@@ -77,17 +70,16 @@ $(document).ready( function () {
         columnDefs: [
             { orderable: false, targets: [0, 4, 5, 6, 9] }
         ],
+        "order": [[ 0, "desc" ]]
     } );
-
-    $('#data tbody').on( 'click', 'tr', function () {
-        if ( $(this).hasClass('selected') ) {
-            $(this).removeClass('selected');
-        }
-        else {
-            table.$('tr.selected').removeClass('selected');
-            $(this).addClass('selected');
-        }
-    } );
+    $("#data tbody").on({
+        click: function() {
+            selectRow($(this), table, false);
+        },
+        dblclick: function() {
+            selectRow($(this), table, true);
+        },
+    }, "tr");
 
     $('#button').click( function () {
         table.row('.selected').remove().draw( false );
@@ -97,4 +89,22 @@ $(document).ready( function () {
     });
 } );
 
+function selectRow(element, table, openModal) {
+    if ( $(element).hasClass('selected') ) {
+        $(element).removeClass('selected');
+    }
+    else {
+        table.$('tr.selected').removeClass('selected');
+        $(element).addClass('selected');
+        if(openModal) {
+            $("#openEditModal").click();
+        }
+    }
+}
+export function addErrorModal(title, body) {
+    $("#alert .modalHeader p").html(title);
+    $("#alert .modalBody").html(body);
+    $("#alert").toggle();
+
+}
 import "./modal";

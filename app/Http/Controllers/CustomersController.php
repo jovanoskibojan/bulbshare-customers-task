@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 class CustomersController extends Controller
 {
 
-    private $fields = ['id', 'company', 'last_name', 'first_name', 'email_address', 'job_title', 'business_phone', 'address', 'city', 'zip_postal_code', 'country_region'];
+    private $fields = ['id', 'company', 'last_name', 'first_name', 'email_address', 'job_title', 'business_phone', 'address', 'city', 'zip_postal_code', 'country_region', 'state_province'];
     /**
      * Display a listing of the resource.
      *
@@ -38,7 +38,13 @@ class CustomersController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            'company' => 'required',
+            'last_name' => 'required',
+            'first_name' => 'required',
+            ''
+        ]);
+        return Customer::create($request->toArray());
     }
 
     /**
@@ -127,8 +133,9 @@ class CustomersController extends Controller
             'last_name' => 'required',
             'first_name' => 'required'
         ]);
-        Customer::where('id', $id)->update($data);
-        return json_encode(['message' => true]);
+        $data = $request->toArray();
+        array_pop($data);
+        return Customer::where('id', $id)->update($data);
     }
 
     /**

@@ -47,7 +47,39 @@
 
 
 @include('modal', ['modalID' => 'modifyData', 'formID' => 'updateModal', 'modalTitle' => 'Update record', 'modalButton' => 'Update', 'modalButtonID' => 'update', 'id_prefix' => ''])
-@include('modal', ['modalID' => 'modifyData2', 'formID' => '', 'modalTitle' => 'Update record2', 'modalButton' => 'Update2', 'modalButtonID' => 'update2', 'id_prefix' => 'new_'])
+@include('modal', ['modalID' => 'addData', 'formID' => 'addModal', 'modalTitle' => 'Add new record', 'modalButton' => 'Add', 'modalButtonID' => 'add', 'id_prefix' => 'new_'])
+
+<div id="removeConfirmation" class="modal">
+    <!-- Modal content -->
+    <div class="modal-content">
+        <div class="modalHeader">
+            <span class="close">&times;</span>
+            <p>Confirm removal</p>
+        </div>
+        <div class="modalBody">
+            Are you sure you wish to remove selected row?
+        </div>
+        <div class="modalFooter">
+            <input type="button" id="remove" value="Yes, remove" class="button.dt-button red">
+            <input type="button" id="cancel" value="Cancel" class="button.dt-button">
+        </div>
+    </div>
+</div>
+<div id="alert" class="modal">
+    <!-- Modal content -->
+    <div class="modal-content">
+        <div class="modalHeader">
+            <span class="close">&times;</span>
+            <p>Error</p>
+        </div>
+        <div class="modalBody">
+            Please make sure you select a row first
+        </div>
+        <div class="modalFooter">
+            <input type="button" value="Ok" class="button.dt-button cancel">
+        </div>
+    </div>
+</div>
 
 <!-- DataTables JS -->
 <script type="text/javascript" src="{{ asset('js/app.js') }}"></script>

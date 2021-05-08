@@ -4,7 +4,7 @@
     <div class="modal-content">
         <div class="modalHeader">
             <span class="close">&times;</span>
-            <p>{{ $modalButton }}</p>
+            <p>{{ $modalTitle }}</p>
         </div>
         <div class="modalBody">
             <form id="{{ $formID }}">

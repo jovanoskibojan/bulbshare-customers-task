@@ -9,30 +9,35 @@
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "table": () => (/* binding */ table),
+/* harmony export */   "addErrorModal": () => (/* binding */ addErrorModal)
+/* harmony export */ });
 /* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
 /* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _modal__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modal */ "./resources/js/modal.js");
 
 window.$ = window.jQuery = (jquery__WEBPACK_IMPORTED_MODULE_0___default());
+var table;
 jquery__WEBPACK_IMPORTED_MODULE_0___default()(document).ready(function () {
   var csrf_token = jquery__WEBPACK_IMPORTED_MODULE_0___default()('meta[name="csrf-token"]').attr('content');
-  var table = jquery__WEBPACK_IMPORTED_MODULE_0___default()('#data').DataTable({
+  table = jquery__WEBPACK_IMPORTED_MODULE_0___default()('#data').DataTable({
     dom: 'Blfrtip',
     buttons: [{
       text: 'New',
       action: function action(e, dt, node, config) {
-        alert('Button activated');
+        jquery__WEBPACK_IMPORTED_MODULE_0___default()("#addData").toggle();
       }
     }, {
       text: 'Edit',
       attr: {
-        id: 'openModal'
+        id: 'openEditModal'
       },
       action: function action(e, dt, node, config) {
         var selData = table.rows(".selected").data();
 
         if (selData[0] === undefined) {
-          alert("Please select a row first");
+          addErrorModal('Error', 'Please make sure you select a row');
           return 0;
         }
 
@@ -59,26 +64,17 @@ jquery__WEBPACK_IMPORTED_MODULE_0___default()(document).ready(function () {
         var selData = table.rows(".selected").data();
 
         if (selData[0] === undefined) {
-          alert("Please select a row first");
+          addErrorModal('Error', 'Please make sure you select a row');
           return 0;
         }
 
-        var rowID = selData[0][0];
-        jquery__WEBPACK_IMPORTED_MODULE_0___default().ajax({
-          url: '/customers/' + rowID,
-          type: 'DELETE',
-          data: {
-            _token: csrf_token
-          },
-          success: function success(result) {
-            table.ajax.reload(null, false);
-          }
-        });
+        jquery__WEBPACK_IMPORTED_MODULE_0___default()("#removeConfirmation").toggle();
       }
     }],
     processing: true,
     serverSide: true,
     paging: true,
+    responsive: true,
     ajax: {
       url: '/customers/load',
       type: 'POST',
@@ -92,16 +88,17 @@ jquery__WEBPACK_IMPORTED_MODULE_0___default()(document).ready(function () {
     columnDefs: [{
       orderable: false,
       targets: [0, 4, 5, 6, 9]
-    }]
+    }],
+    "order": [[0, "desc"]]
   });
-  jquery__WEBPACK_IMPORTED_MODULE_0___default()('#data tbody').on('click', 'tr', function () {
-    if (jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).hasClass('selected')) {
-      jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).removeClass('selected');
-    } else {
-      table.$('tr.selected').removeClass('selected');
-      jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).addClass('selected');
+  jquery__WEBPACK_IMPORTED_MODULE_0___default()("#data tbody").on({
+    click: function click() {
+      selectRow(jquery__WEBPACK_IMPORTED_MODULE_0___default()(this), table, false);
+    },
+    dblclick: function dblclick() {
+      selectRow(jquery__WEBPACK_IMPORTED_MODULE_0___default()(this), table, true);
     }
-  });
+  }, "tr");
   jquery__WEBPACK_IMPORTED_MODULE_0___default()('#button').click(function () {
     table.row('.selected').remove().draw(false);
   });
@@ -109,6 +106,25 @@ jquery__WEBPACK_IMPORTED_MODULE_0___default()(document).ready(function () {
     console.log(e);
   });
 });
+
+function selectRow(element, table, openModal) {
+  if (jquery__WEBPACK_IMPORTED_MODULE_0___default()(element).hasClass('selected')) {
+    jquery__WEBPACK_IMPORTED_MODULE_0___default()(element).removeClass('selected');
+  } else {
+    table.$('tr.selected').removeClass('selected');
+    jquery__WEBPACK_IMPORTED_MODULE_0___default()(element).addClass('selected');
+
+    if (openModal) {
+      jquery__WEBPACK_IMPORTED_MODULE_0___default()("#openEditModal").click();
+    }
+  }
+}
+
+function addErrorModal(title, body) {
+  jquery__WEBPACK_IMPORTED_MODULE_0___default()("#alert .modalHeader p").html(title);
+  jquery__WEBPACK_IMPORTED_MODULE_0___default()("#alert .modalBody").html(body);
+  jquery__WEBPACK_IMPORTED_MODULE_0___default()("#alert").toggle();
+}
 
 
 /***/ }),
@@ -123,16 +139,22 @@ jquery__WEBPACK_IMPORTED_MODULE_0___default()(document).ready(function () {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
 /* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _app__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./app */ "./resources/js/app.js");
+
 
 jquery__WEBPACK_IMPORTED_MODULE_0___default()(document).ready(function () {
   var csrf_token = jquery__WEBPACK_IMPORTED_MODULE_0___default()('meta[name="csrf-token"]').attr('content');
-  var modal = jquery__WEBPACK_IMPORTED_MODULE_0___default()("#modifyData");
+  var modal = jquery__WEBPACK_IMPORTED_MODULE_0___default()(".modal");
   jquery__WEBPACK_IMPORTED_MODULE_0___default()(".close").click(function () {
-    modal.toggle();
+    modal.each(function () {
+      jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).hide();
+    });
   });
   jquery__WEBPACK_IMPORTED_MODULE_0___default()(window).click(function (event) {
-    if (event.target.id == 'modifyData') {
-      modal.toggle();
+    if (event.target.id == 'modifyData' || event.target.id == 'addData' || event.target.id == 'removeConfirmation' || event.target.id == 'alert') {
+      modal.each(function () {
+        jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).hide();
+      });
     }
   });
   jquery__WEBPACK_IMPORTED_MODULE_0___default()("#update").click(function () {
@@ -153,14 +175,14 @@ jquery__WEBPACK_IMPORTED_MODULE_0___default()(document).ready(function () {
       data: formData,
       success: function success(result) {
         result = JSON.parse(result);
-
-        if (result.message) {
-          requiredIDs.forEach(function (item) {
-            var field = jquery__WEBPACK_IMPORTED_MODULE_0___default()("#" + item);
-            field.parent().parent().removeClass('field-error');
-            field.next().html('');
-          });
-        }
+        requiredIDs.forEach(function (item) {
+          var field = jquery__WEBPACK_IMPORTED_MODULE_0___default()("#" + item);
+          field.parent().parent().removeClass('field-error');
+          field.next().html('');
+        });
+        _app__WEBPACK_IMPORTED_MODULE_1__.table.ajax.reload(null, false);
+        jquery__WEBPACK_IMPORTED_MODULE_0___default()("#modifyData").hide();
+        (0,_app__WEBPACK_IMPORTED_MODULE_1__.addErrorModal)('Success', 'Row has been successfully updated');
       },
       error: function error(xhr) {
         var fieldsWithErrors = [];
@@ -172,7 +194,6 @@ jquery__WEBPACK_IMPORTED_MODULE_0___default()(document).ready(function () {
         });
         requiredIDs.forEach(function (item) {
           if (jQuery.inArray(item, fieldsWithErrors) === -1) {
-            console.log("yes");
             var field = jquery__WEBPACK_IMPORTED_MODULE_0___default()("#" + item);
             field.parent().parent().removeClass('field-error');
             field.next().html('');
@@ -180,6 +201,70 @@ jquery__WEBPACK_IMPORTED_MODULE_0___default()(document).ready(function () {
         });
       }
     });
+  });
+  jquery__WEBPACK_IMPORTED_MODULE_0___default()("#add").click(function () {
+    var formData = jquery__WEBPACK_IMPORTED_MODULE_0___default()('#addModal').serializeArray();
+    var requiredFields = jquery__WEBPACK_IMPORTED_MODULE_0___default()('input:required');
+    var requiredIDs = [];
+    requiredFields.each(function () {
+      requiredIDs.push(jquery__WEBPACK_IMPORTED_MODULE_0___default()(this).attr('id'));
+    });
+    formData.push({
+      name: '_token',
+      value: csrf_token
+    });
+    jquery__WEBPACK_IMPORTED_MODULE_0___default().ajax({
+      url: '/customers',
+      type: 'POST',
+      data: formData,
+      success: function success(result) {
+        requiredIDs.forEach(function (item) {
+          var field = jquery__WEBPACK_IMPORTED_MODULE_0___default()("#" + item);
+          field.parent().parent().removeClass('field-error');
+          field.next().html('');
+        });
+        _app__WEBPACK_IMPORTED_MODULE_1__.table.ajax.reload(null, false);
+        jquery__WEBPACK_IMPORTED_MODULE_0___default()("#addData").hide();
+        (0,_app__WEBPACK_IMPORTED_MODULE_1__.addErrorModal)('Success', 'New row has been successfully added');
+      },
+      error: function error(xhr) {
+        var fieldsWithErrors = [];
+        jquery__WEBPACK_IMPORTED_MODULE_0___default().each(xhr.responseJSON.errors, function (key, value) {
+          var field = jquery__WEBPACK_IMPORTED_MODULE_0___default()("#new_" + key);
+          field.parent().parent().addClass('field-error');
+          field.next().html(value);
+          fieldsWithErrors.push(key);
+        });
+        requiredIDs.forEach(function (item) {
+          if (jQuery.inArray(item, fieldsWithErrors) === -1) {
+            var field = jquery__WEBPACK_IMPORTED_MODULE_0___default()("#new_" + item);
+            field.parent().parent().removeClass('field-error');
+            field.next().html('');
+          }
+        });
+      }
+    });
+  });
+  jquery__WEBPACK_IMPORTED_MODULE_0___default()("#remove").click(function () {
+    var selData = _app__WEBPACK_IMPORTED_MODULE_1__.table.rows(".selected").data();
+    var rowID = selData[0][0];
+    jquery__WEBPACK_IMPORTED_MODULE_0___default().ajax({
+      url: '/customers/' + rowID,
+      type: 'DELETE',
+      data: {
+        _token: csrf_token
+      },
+      success: function success(result) {
+        _app__WEBPACK_IMPORTED_MODULE_1__.table.ajax.reload(null, false);
+        jquery__WEBPACK_IMPORTED_MODULE_0___default()("#removeConfirmation").toggle();
+      }
+    });
+  });
+  jquery__WEBPACK_IMPORTED_MODULE_0___default()("#cancel").click(function () {
+    jquery__WEBPACK_IMPORTED_MODULE_0___default()("#removeConfirmation").hide();
+  });
+  jquery__WEBPACK_IMPORTED_MODULE_0___default()(".cancel").click(function () {
+    jquery__WEBPACK_IMPORTED_MODULE_0___default()("#alert").hide();
   });
 });
 
